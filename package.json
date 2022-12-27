@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/ngamsomset/nodejs-max-p/issues"
   },
-  "homepage": "https://github.com/ngamsomset/nodejs-max-p#readme"
+  "homepage": "https://github.com/ngamsomset/nodejs-max-p#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
