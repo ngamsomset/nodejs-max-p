@@ -48,3 +48,15 @@ const requestHandler = (req, res) => {
 
 
 module.exports = requestHandler
+
+// or
+
+// module.exports = {
+//     handler: requestHandler,
+//     someText : 'this is a text'
+// }
+
+//or
+//module is omit - Nodejs feature.
+// exports.handler = requestHandler
+// exports.text = 'this is a text'
