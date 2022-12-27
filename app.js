@@ -13,7 +13,19 @@ const server = http.createServer((req,res) => {
     }
 
     if(url === '/message' && method === 'POST'){
-        fs.writeFileSync('text.txt', 'DUMMY')
+        //Parsing request body
+        const body = []
+        req.on('data', (chunk) => {
+            console.log(chunk)
+            body.push(chunk)
+        })
+        req.on('end', () => {
+            //parseBody (Buffer) is what we want to use.
+            const parseBody = Buffer.concat(body).toString()
+            const message = parseBody.split('=')[1]
+            console.log(parseBody)
+            fs.writeFileSync('text.txt', message)
+        })
         res.statusCode = 302;
         //Redirect to the home page
         res.setHeader('Location', '/')
