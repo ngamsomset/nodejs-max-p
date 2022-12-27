@@ -15,6 +15,7 @@ const server = http.createServer((req,res) => {
     if(url === '/message' && method === 'POST'){
         fs.writeFileSync('text.txt', 'DUMMY')
         res.statusCode = 302;
+        //Redirect to the home page
         res.setHeader('Location', '/')
         return res.end()
     }
