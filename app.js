@@ -10,7 +10,9 @@ const shopRouter = require('./routes/shop')
 
 app.use(express.urlencoded({extended: true}))
 
-app.use(adminRouter)
+//add the prefix route here to filter. only route contain
+//this particular slug will render.
+app.use('/admin',adminRouter)
 app.use(shopRouter)
 
 app.use((req,res,next) => {
