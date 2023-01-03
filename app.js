@@ -9,6 +9,7 @@ const adminRouter = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
 app.use(express.urlencoded({extended: true}))
+app.use(express.static(path.join(__dirname, 'public')))
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
