@@ -5,7 +5,7 @@ const path = require('path')
 
 const app = express()
 
-const adminRouter = require('./routes/admin')
+const adminData = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
 app.use(express.urlencoded({extended: true}))
@@ -13,7 +13,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
-app.use('/admin',adminRouter)
+app.use('/admin',adminData.routes)
 app.use(shopRouter)
 
 app.use((req,res,next) => {
