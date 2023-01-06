@@ -5,6 +5,10 @@ const path = require('path')
 
 const app = express()
 
+//set express to load the tempalte engine that we want
+app.set('view engine', 'pug')
+app.set('views', 'views')
+
 const adminData = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
