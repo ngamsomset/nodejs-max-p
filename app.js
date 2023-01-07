@@ -10,7 +10,7 @@ const app = express()
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
-const adminData = require('./routes/admin')
+const adminRoute = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
-app.use('/admin',adminData.routes)
+app.use('/admin',adminRoute)
 app.use(shopRouter)
 
 app.use((req,res,next) => {
