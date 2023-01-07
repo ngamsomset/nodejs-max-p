@@ -6,10 +6,8 @@ const adminData = require('./admin')
 
 
 router.get('/', (req,res,next) =>{
-    //__dirname hold the absolute path of the project
-    res.sendFile(path.join(rootDir, 'views', 'shop.html'))
-    console.log(adminData.products, 'shop.js')
-
+    const products = adminData.products
+    res.render('shop', {title: 'Shopxx', products: products})
 })
 
 module.exports = router
