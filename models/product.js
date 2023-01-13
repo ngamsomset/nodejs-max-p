@@ -34,6 +34,7 @@ module.exports = class Product {
     }
 
     save() {
+        this.id = Math.random().toString()
         //this will save the data into a json file in /data directory
         getProductsFromFile(products => {
             products.push(this)
