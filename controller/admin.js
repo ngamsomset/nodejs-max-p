@@ -14,6 +14,7 @@ exports.getAddProducts = (req, res, next) => {
     res.render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/add-product',
+      editing: false
     });
 }
 
@@ -23,11 +24,21 @@ exports.getEditProducts = (req, res, next) => {
   if (!editMode) {
     return res.redirect('/')
   }
-  res.render('admin/edit-product', {
-    pageTitle: 'Add Product',
-    path: '/admin/edit-product',
-    editing: editMode
-  });
+  //Get the product Id from the URL that we pass :productId to
+  //We want to get the data of that product and populate it 
+  //in the input field for user to edit
+  const prodId = req.params.productId
+  Product.findById(prodId, product => {
+    if(!product) {
+      return res.redirect('/')
+    }
+    res.render('admin/edit-product', {
+      pageTitle: 'Add Product',
+      path: '/admin/edit-product',
+      editing: editMode,
+      product: product
+    });
+  })
 }
 
 exports.getAllProducts = (req,res,next) => {
