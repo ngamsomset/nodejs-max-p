@@ -57,6 +57,16 @@ module.exports = class Product {
         })
     }
 
+    static delete(id) {
+        getProductsFromFile(products => {
+                //use filter to filter out the delete one and return an array without that delete item
+                const updatedProduct = products.filter(prod => prod.id !== id)
+                fs.writeFile(p, JSON.stringify(updatedProduct), (err) => {
+                    console.log(err)
+                })
+        })
+    }
+
     //the reason that we need to pass cb into this fetchAll
     //is that this is async operation, in the fronend at shop.ejs
     //we call products.length too early while there is no data
