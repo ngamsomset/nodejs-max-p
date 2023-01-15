@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const pathDir = require('../utils/path')
+const Cart = require('./cart')
 
 
 
@@ -59,10 +60,13 @@ module.exports = class Product {
 
     static delete(id) {
         getProductsFromFile(products => {
+                const product = products.find(prod => prod.id === id)
                 //use filter to filter out the delete one and return an array without that delete item
                 const updatedProduct = products.filter(prod => prod.id !== id)
                 fs.writeFile(p, JSON.stringify(updatedProduct), (err) => {
-                    console.log(err)
+                    if(!err) {
+                        Cart.deleteProduct(id, product.price)
+                    }
                 })
         })
     }
