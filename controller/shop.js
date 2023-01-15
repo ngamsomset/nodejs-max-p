@@ -33,9 +33,26 @@ exports.getIndex = (req,res,next) => {
 }
 
 exports.getCart = (req,res,next) => {
-  res.render('shop/cart', {
-      path: '/cart',
-      pageTitle: 'Your Cart'
+  //we dont want just the item in the cart but we also want
+  //the detail of those product in the cart, so we need to
+  //compare item in the cart with the product list(use ID)
+  Cart.getCart(cart => {
+    Product.fetchAll(products => {
+      const cartProducts = []
+      //need to filter out the product that is in the cart
+      for (product of products) {
+        const cartProductData = cart.products.find(prod => prod.id == product.id)
+        if(cartProductData) {
+          //we need to include qty because in the product array there is no qty.
+          cartProducts.push({productData: product, qty:cartProductData.qty})
+        }
+      }
+      res.render('shop/cart', {
+          path: '/cart',
+          pageTitle: 'Your Cart',
+          products: cartProducts
+      })
+    })
   })
 }
 
