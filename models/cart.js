@@ -51,6 +51,10 @@ module.exports = class Cart {
             }
             const updatedCart = {...JSON.parse(fileContent)}
             const product = updatedCart.products.find(prod => prod.id === id)
+            //We need to check if the product that we want to delete is in the cart
+            if(!product) {
+                return
+            }
             const productQty = product.qty
             updatedCart.products = updatedCart.products.filter(prod => prod.id !== id)
             updatedCart.totalPrice = updatedCart.totalPrice - productPrice * productQty
