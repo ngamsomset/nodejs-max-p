@@ -10,7 +10,12 @@ exports.postAddProducts = (req, res, next) => {
     //pass to the save() not at edit. 
     const product = new Product(null, title, imageUrl, price, description)
     product.save()
-    res.redirect('/');
+      .then(() => {
+        res.redirect('/')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 }
 
 exports.getAddProducts = (req, res, next) => {
