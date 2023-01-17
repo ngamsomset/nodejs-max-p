@@ -1,8 +1,8 @@
-const Sequalize = require('sequalize')
-const sequalize = new Sequalize('nodejs_max', 'root', 'password', {
+const Sequelize = require('sequelize')
+const sequelize = new Sequelize('nodejs_max', 'root', 'password', {
     host: 'localhost',
     dialect: 'mysql'
 })
 
 
-module.exports = sequalize
+module.exports = sequelize
