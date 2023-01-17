@@ -5,17 +5,20 @@ exports.postAddProducts = (req, res, next) => {
     const imageUrl = req.body.imageUrl
     const price = req.body.price
     const description = req.body.description
-    //the first argument need to be null as we use the same method for save and edit
-    //by passing null, we want to make sure that the logic in the model save() get
-    //pass to the save() not at edit. 
-    const product = new Product(null, title, imageUrl, price, description)
-    product.save()
-      .then(() => {
-        res.redirect('/')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+   
+    Product.create({
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description
+    })
+    .then((result) => {
+      // console.log(result)
+      console.log('product created!')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 exports.getAddProducts = (req, res, next) => {
