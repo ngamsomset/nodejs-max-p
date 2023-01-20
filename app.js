@@ -5,14 +5,14 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const pageNotFoundController = require('./controller/404')
-const mongoConnect = require('./utils/database')
+const mongoConnect = require('./utils/database').mongoConnect
 //set express to load the tempalte engine that we want
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
 require('dotenv').config({path: path.resolve(__dirname+'/.env')});
 
-// const adminRoute = require('./routes/admin')
+const adminRoute = require('./routes/admin')
 // const shopRouter = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
-// app.use('/admin',adminRoute)
+app.use('/admin',adminRoute)
 // app.use(shopRouter)
 
 app.use(pageNotFoundController.pageNotFound)
