@@ -5,6 +5,7 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const pageNotFoundController = require('./controller/404')
+const sequelize = require('./utils/database')
 //set express to load the tempalte engine that we want
 app.set('view engine', 'ejs')
 app.set('views', 'views')
@@ -22,4 +23,14 @@ app.use(shopRouter)
 
 app.use(pageNotFoundController.pageNotFound)
 
-app.listen(3000);
+
+sequelize
+    .sync()
+    .then(result => {
+        // console.log(result)
+        app.listen(3000);
+    })
+    .catch(err => {
+        console.log(err)
+    })
+

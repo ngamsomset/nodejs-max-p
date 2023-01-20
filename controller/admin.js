@@ -5,17 +5,21 @@ exports.postAddProducts = (req, res, next) => {
     const imageUrl = req.body.imageUrl
     const price = req.body.price
     const description = req.body.description
-    //the first argument need to be null as we use the same method for save and edit
-    //by passing null, we want to make sure that the logic in the model save() get
-    //pass to the save() not at edit. 
-    const product = new Product(null, title, imageUrl, price, description)
-    product.save()
-      .then(() => {
-        res.redirect('/')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+   
+    Product.create({
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description
+    })
+    .then((result) => {
+      // console.log(result)
+      console.log('product created!')
+      res.redirect('/admin/products')
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 exports.getAddProducts = (req, res, next) => {
@@ -32,14 +36,10 @@ exports.getEditProducts = (req, res, next) => {
   if (!editMode) {
     return res.redirect('/')
   }
-  //Get the product Id from the URL that we pass :productId to
-  //We want to get the data of that product and populate it 
-  //in the input field for user to edit
+
   const prodId = req.params.productId
-  Product.findById(prodId, product => {
-    if(!product) {
-      return res.redirect('/')
-    }
+  Product.findByPk(prodId)
+  .then((product) => {
     res.render('admin/edit-product', {
       pageTitle: 'Add Product',
       path: '/admin/edit-product',
@@ -47,31 +47,54 @@ exports.getEditProducts = (req, res, next) => {
       product: product
     });
   })
+  .catch((err) => {
+    console.log(err)
+  })
 }
 
-exports.getPostEditProducts = (req,res,next) => {
+exports.getPostEditProducts = async (req,res,next) => {
   const prodId =  req.body.productId
   const updatedTitle = req.body.title
   const updatedPrice = req.body.price
   const updatedImageUrl = req.body.imageUrl
   const updatedDesc = req.body.description
-  const updatedProduct = new Product(prodId, updatedTitle, updatedImageUrl, updatedPrice, updatedDesc)
-  updatedProduct.save()
+
+try {
+  await Product.update({ title: updatedTitle, price: updatedPrice, imageUrl: updatedImageUrl, description: updatedDesc }, {
+    where: {
+      id: prodId
+    }
+  })
   res.redirect('/admin/products')
+} catch(err) {
+  console.log(err)
+}
+
 }
 
 exports.getAllProducts = (req,res,next) => {
-  Product.fetchAll(products => {
+  Product.findAll()
+  .then((products) => {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Products',
       path: '/admin/products',
     });
   })
+  .catch((err) => {
+    console.log(err)
+  })
 }
 
 exports.deleteProduct = (req,res,next) => {
   const prodId =  req.body.productId
-  Product.delete(prodId)
+  Product.destroy({
+    where: {
+      id: prodId
+    }
+  })
+  .catch((err) => {
+    console.log(err)
+  })
   res.redirect('/admin/products')
 }
