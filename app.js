@@ -10,6 +10,8 @@ const mongoConnect = require('./utils/database')
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
+require('dotenv').config({path: path.resolve(__dirname+'/.env')});
+
 // const adminRoute = require('./routes/admin')
 // const shopRouter = require('./routes/shop')
 
@@ -29,3 +31,4 @@ mongoConnect((client) => {
 })
 
 
+console.log(process.env.DB_CONNECT)
