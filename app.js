@@ -5,32 +5,27 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const pageNotFoundController = require('./controller/404')
-const sequelize = require('./utils/database')
+const mongoConnect = require('./utils/database')
 //set express to load the tempalte engine that we want
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
-const adminRoute = require('./routes/admin')
-const shopRouter = require('./routes/shop')
+// const adminRoute = require('./routes/admin')
+// const shopRouter = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
-app.use('/admin',adminRoute)
-app.use(shopRouter)
+// app.use('/admin',adminRoute)
+// app.use(shopRouter)
 
 app.use(pageNotFoundController.pageNotFound)
 
+mongoConnect((client) => {
+    console.log(client)
+    app.listen(3000)
+})
 
-sequelize
-    .sync()
-    .then(result => {
-        // console.log(result)
-        app.listen(3000);
-    })
-    .catch(err => {
-        console.log(err)
-    })
 
