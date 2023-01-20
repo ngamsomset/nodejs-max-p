@@ -25,10 +25,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(pageNotFoundController.pageNotFound)
 
-mongoConnect((client) => {
-    console.log(client)
+mongoConnect(() => {
     app.listen(3000)
 })
-
-
-console.log(process.env.DB_CONNECT)
