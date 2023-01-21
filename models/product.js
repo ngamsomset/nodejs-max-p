@@ -13,9 +13,6 @@ class Product {
     save() {
         const db = getDb()
         return  db.collection('products').insertOne(this)
-            .then((result) => {
-                console.log(result)
-            })
             .catch((err) => {
                 console.log(err)
             })
@@ -24,9 +21,14 @@ class Product {
     update() {
         const db = getDb()
         return db.collection('products').updateOne({ _id: this._id }, { $set: this })
-        .then(result => {
-            console.log(result)
+        .catch(err => {
+            console.log(err)
         })
+    }
+
+    static delete(prodId) {
+        const db = getDb()
+        return db.collection('products').deleteOne({ _id: new mongodb.ObjectId(prodId)})
         .catch(err => {
             console.log(err)
         })

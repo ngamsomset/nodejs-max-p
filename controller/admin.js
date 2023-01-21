@@ -79,15 +79,11 @@ exports.getAllProducts = (req,res,next) => {
   })
 }
 
-// exports.deleteProduct = (req,res,next) => {
-//   const prodId =  req.body.productId
-//   Product.destroy({
-//     where: {
-//       id: prodId
-//     }
-//   })
-//   .catch((err) => {
-//     console.log(err)
-//   })
-//   res.redirect('/admin/products')
-// }
+exports.deleteProduct = (req,res,next) => {
+  const prodId =  req.body.productId
+  Product.delete(prodId)
+  .catch((err) => {
+    console.log(err)
+  })
+  res.redirect('/admin/products')
+}
