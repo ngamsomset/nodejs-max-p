@@ -17,9 +17,29 @@ class User {
     }
 
     addToCart(product) {
+        //get the existing product in the cart
+        const cartProductIndex = this.cart.items.findIndex(cp => {
+            return cp.productId.toString() === product._id.toString()
+        })
+        //init new qty = 1
+        let newQuantity = 1
+        const updatedCartItem = [...this.cart.items]
+
+        //check if the product is already in the cart
+        //if item exist in the cart, we want to set the quantity of that product + 1
+        //else we want to push the new object into the cart.
+        if (cartProductIndex >= 0) {
+            newQuantity = this.cart.items[cartProductIndex].quantity + 1
+            updatedCartItem[cartProductIndex].quantity = newQuantity
+        } else {
+            updatedCartItem.push({
+                productId: new mongodb.ObjectId(product._id),
+                quantity: newQuantity
+            })
+        }
+        
+        const updatedCart = {items: updatedCartItem}
         const db = getDb()
-        //store only productId because the rest of the data from product we don't need.
-        const updatedCart = {items: [{ productId: mongodb.ObjectId(product._id), quantity: 1 }]}
         return db.collection('users')
                 .updateOne({ _id: mongodb.ObjectId(this._id) }, { $set: {cart: updatedCart} })
                 .catch(err => console.log(err))
