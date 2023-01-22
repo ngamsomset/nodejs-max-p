@@ -8,7 +8,7 @@ router.get('/products', shopController.getProducts);
 //this REGEX is to make sure that the ID is a valid ObjectId for mongodb to use.
 router.get('/products/:productId([0-9a-fA-F]{24})', shopController.getProduct);
 // router.get('/cart', shopController.getCart);
-// router.post('/cart', shopController.postCart);
+router.post('/cart', shopController.postCart);
 // router.get('/orders', shopController.getOrders);
 // router.get('/checkout', shopController.checkOut);
 // router.post('/delete-from-cart', shopController.deleteFromCart);

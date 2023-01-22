@@ -22,7 +22,10 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use((req,res,next) => {
     User.findById('63cc5f00f180235a13905dd2')
         .then(user => {
-            req.user = user
+            //important! We need to construct a new User because we want to use
+            //all of our User method.
+            req.user = new User(user.name, user.email, user.cart, user._id)
+            console.log(req.user)
             next()
         })
         .catch(err => {

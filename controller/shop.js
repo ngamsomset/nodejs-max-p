@@ -1,5 +1,4 @@
 const Product = require('../models/product')
-const Cart = require('../models/cart')
 
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
@@ -45,44 +44,45 @@ exports.getIndex = (req,res,next) => {
   })
 }
 
-exports.getCart = (req,res,next) => {
-  //we dont want just the item in the cart but we also want
-  //the detail of those product in the cart, so we need to
-  //compare item in the cart with the product list(use ID)
-  Cart.getCart(cart => {
-    Product.fetchAll(products => {
-      const cartProducts = []
-      //need to filter out the product that is in the cart
-      for (product of products) {
-        const cartProductData = cart.products.find(prod => prod.id == product.id)
-        if(cartProductData) {
-          //we need to include qty because in the product array there is no qty.
-          cartProducts.push({productData: product, qty:cartProductData.qty})
-        }
-      }
-      res.render('shop/cart', {
-          path: '/cart',
-          pageTitle: 'Your Cart',
-          products: cartProducts
-      })
-    })
-  })
-}
+// exports.getCart = (req,res,next) => {
+//   //we dont want just the item in the cart but we also want
+//   //the detail of those product in the cart, so we need to
+//   //compare item in the cart with the product list(use ID)
+//   Cart.getCart(cart => {
+//     Product.fetchAll(products => {
+//       const cartProducts = []
+//       //need to filter out the product that is in the cart
+//       for (product of products) {
+//         const cartProductData = cart.products.find(prod => prod.id == product.id)
+//         if(cartProductData) {
+//           //we need to include qty because in the product array there is no qty.
+//           cartProducts.push({productData: product, qty:cartProductData.qty})
+//         }
+//       }
+//       res.render('shop/cart', {
+//           path: '/cart',
+//           pageTitle: 'Your Cart',
+//           products: cartProducts
+//       })
+//     })
+//   })
+// }
 
-exports.deleteFromCart = (req,res,next) => {
-  const prodId = req.body.productId
-  Product.fetchAll(product => {
-    Cart.deleteProduct(prodId, product.price)
-  })
-  res.redirect('/cart')
-}
+// exports.deleteFromCart = (req,res,next) => {
+//   const prodId = req.body.productId
+//   Product.fetchAll(product => {
+//     Cart.deleteProduct(prodId, product.price)
+//   })
+//   res.redirect('/cart')
+// }
 
 exports.postCart = (req,res,next) => {
   const prodId = req.body.productId
-  Product.findById(prodId, product => {
-    Cart.addProduct(prodId, product.price)
+  Product.findById(prodId)
+  .then(product => {
+    return req.user.addToCart(product)
   })
-  res.redirect('/cart')
+  .then(result => console.log(result))
 }
 
 exports.checkOut = (req,res,next) => {
