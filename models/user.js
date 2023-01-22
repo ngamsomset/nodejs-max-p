@@ -45,6 +45,38 @@ class User {
                 .catch(err => console.log(err))
     }
 
+    //only the person who got an item in the cart.
+    //getCart() will have to return a fully populated cart.(because we store only a productId in the cart)
+    //Steps
+    //- Reach to the DB to find the matching productId in the Cart and the product _id which is in the products.
+    // Because we don't have a full embeded reference between each collections so we need to merge them manually
+    getCart(){
+        const db = getDb()
+
+        const productIds = []
+        const quantities = {}
+
+        //CART
+        //loop through the cart items and get the productId and quantity
+        this.cart.items.forEach(element => {
+            let prodId = element.productId
+            productIds.push(prodId)
+            quantities[prodId] = element.quantity
+        });
+
+        //PRODUCTS
+        return db
+                .collection('products')
+                .find({ _id: { $in: productIds} })
+                .toArray()
+                .then((products) => {
+                    return products.map((p) => {
+                        return {...p, quantity: quantities[p._id]}
+                    })
+                })
+
+    }
+
     static findById(userId) {
         const db = getDb()
         return db.collection('users')

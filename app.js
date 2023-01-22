@@ -25,7 +25,6 @@ app.use((req,res,next) => {
             //important! We need to construct a new User because we want to use
             //all of our User method.
             req.user = new User(user.name, user.email, user.cart, user._id)
-            console.log(req.user)
             next()
         })
         .catch(err => {
