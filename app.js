@@ -5,7 +5,10 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const pageNotFoundController = require('./controller/404')
-const mongoConnect = require('./utils/database').mongoConnect
+
+const mongoose = require('mongoose')
+
+
 //set express to load the tempalte engine that we want
 app.set('view engine', 'ejs')
 app.set('views', 'views')
@@ -39,6 +42,8 @@ app.use(shopRouter)
 
 app.use(pageNotFoundController.pageNotFound)
 
-mongoConnect(() => {
+mongoose.connect(process.env.DB_CONNECT)
+.then(result => {
     app.listen(3000)
 })
+.catch(err => console.error(err))
