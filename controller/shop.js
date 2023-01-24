@@ -87,6 +87,15 @@ exports.checkOut = (req,res,next) => {
   })
 }
 
+exports.postOrders = (req, res, next) => {
+  req.user
+    .addOrder()
+    .then(result => {
+      res.redirect('/orders')
+    })
+    .catch(err => console.error(err))
+}
+
 exports.getOrders = (req,res,next) => {
   res.render('shop/orders', {
       path: '/orders',
