@@ -5,13 +5,8 @@ exports.postAddProducts = (req, res, next) => {
     const imageUrl = req.body.imageUrl
     const price = req.body.price
     const description = req.body.description
-   
-    Product.create({
-      title: title,
-      price: price,
-      imageUrl: imageUrl,
-      description: description
-    })
+    const product = new Product(title, price, description, imageUrl, null, req.user._id)
+    product.save()
     .then((result) => {
       // console.log(result)
       console.log('product created!')
@@ -38,7 +33,7 @@ exports.getEditProducts = (req, res, next) => {
   }
 
   const prodId = req.params.productId
-  Product.findByPk(prodId)
+  Product.findById(prodId)
   .then((product) => {
     res.render('admin/edit-product', {
       pageTitle: 'Add Product',
@@ -59,21 +54,19 @@ exports.getPostEditProducts = async (req,res,next) => {
   const updatedImageUrl = req.body.imageUrl
   const updatedDesc = req.body.description
 
-try {
-  await Product.update({ title: updatedTitle, price: updatedPrice, imageUrl: updatedImageUrl, description: updatedDesc }, {
-    where: {
-      id: prodId
-    }
-  })
-  res.redirect('/admin/products')
-} catch(err) {
-  console.log(err)
-}
+  const product = new Product(updatedTitle, updatedPrice, updatedDesc, updatedImageUrl, prodId)
+  product.update()
+    .then(result => {
+      console.log('UPDATED PRODUCT!')
+      res.redirect('/admin/products')
+    })
+    .catch(err => console.log(err))
+
 
 }
 
 exports.getAllProducts = (req,res,next) => {
-  Product.findAll()
+  Product.fetchAll()
   .then((products) => {
     res.render('admin/products', {
       prods: products,
@@ -88,11 +81,7 @@ exports.getAllProducts = (req,res,next) => {
 
 exports.deleteProduct = (req,res,next) => {
   const prodId =  req.body.productId
-  Product.destroy({
-    where: {
-      id: prodId
-    }
-  })
+  Product.delete(prodId)
   .catch((err) => {
     console.log(err)
   })

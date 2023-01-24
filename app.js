@@ -5,16 +5,32 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const pageNotFoundController = require('./controller/404')
-const sequelize = require('./utils/database')
+const mongoConnect = require('./utils/database').mongoConnect
 //set express to load the tempalte engine that we want
 app.set('view engine', 'ejs')
 app.set('views', 'views')
 
+require('dotenv').config({path: path.resolve(__dirname+'/.env')});
+
+const User = require('./models/user')
 const adminRoute = require('./routes/admin')
 const shopRouter = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname, 'public')))
+
+app.use((req,res,next) => {
+    User.findById('63cc5f00f180235a13905dd2')
+        .then(user => {
+            //important! We need to construct a new User because we want to use
+            //all of our User method.
+            req.user = new User(user.name, user.email, user.cart, user._id)
+            next()
+        })
+        .catch(err => {
+            console.log(err)
+        })
+})
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
@@ -23,14 +39,6 @@ app.use(shopRouter)
 
 app.use(pageNotFoundController.pageNotFound)
 
-
-sequelize
-    .sync()
-    .then(result => {
-        // console.log(result)
-        app.listen(3000);
-    })
-    .catch(err => {
-        console.log(err)
-    })
-
+mongoConnect(() => {
+    app.listen(3000)
+})
