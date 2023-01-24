@@ -91,15 +91,32 @@ class User {
     addOrder(){
         //getting the item that is already in the cart and put into the order then empty the cart.
         //empty the cart, and remove them from the db.
+
+        //when adding order, we need to add, user info and product info as well,
+        //because when we getOrder to display those on the page, we will need those info.
         const db = getDb()
-        return db.collection('orders')
-                .insertOne(this.cart)
-                .then(result => {
-                    this.cart = {items: []}
-                    return db.collection('users')
-                    .updateOne({ _id: mongodb.ObjectId(this._id) }, { $set: {cart: {items: []}} })
-                    .catch(err => console.log(err))
-                })
+        return this.getCart().then(products => {
+            const order = {
+                items: products,
+                user: {
+                    _id: new mongodb.ObjectId(this._id),
+                    name: this.name,
+                }
+            }
+            return db.collection('orders').insertOne(order)
+        })
+        .then(result => {
+            this.cart = {items: []}
+            return db.collection('users')
+                .updateOne({ _id: mongodb.ObjectId(this._id) }, { $set: {cart: {items: []}} })
+                .catch(err => console.log(err))
+        })
+    }
+
+    getOrder() {
+        const db = getDb()
+        //mongodb buildin method to compare the property 'user._id'
+        return db.collection('orders').find({'user._id': new mongodb.ObjectId(this._id)}).toArray()
     }
 
     static findById(userId) {

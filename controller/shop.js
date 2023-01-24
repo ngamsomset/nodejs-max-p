@@ -97,8 +97,12 @@ exports.postOrders = (req, res, next) => {
 }
 
 exports.getOrders = (req,res,next) => {
-  res.render('shop/orders', {
-      path: '/orders',
-      pageTitle: 'Get orders'
-  })
+  req.user.getOrder()
+    .then(order => {
+      res.render('shop/orders', {
+          path: '/orders',
+          pageTitle: 'Get orders',
+          orders: order
+      })
+    })
 }
