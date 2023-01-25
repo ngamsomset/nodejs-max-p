@@ -14,25 +14,25 @@ app.set("views", "views");
 
 require("dotenv").config({ path: path.resolve(__dirname + "/.env") });
 
-const User = require("./models/user");
+// const User = require("./models/user");
 const adminRoute = require("./routes/admin");
 const shopRouter = require("./routes/shop");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  User.findById("63cc5f00f180235a13905dd2")
-    .then((user) => {
-      //important! We need to construct a new User because we want to use
-      //all of our User method.
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+// app.use((req, res, next) => {
+//   User.findById("63cc5f00f180235a13905dd2")
+//     .then((user) => {
+//       //important! We need to construct a new User because we want to use
+//       //all of our User method.
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       next();
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// });
 
 //add the prefix route here to filter. only route contain
 //this particular slug will render.
