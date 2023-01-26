@@ -90,8 +90,8 @@ exports.getAllProducts = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.delete(prodId).catch((err) => {
-    console.log(err);
+  Product.deleteOne({ _id: prodId }).catch((err) => {
+    console.error(err);
   });
   res.redirect("/admin/products");
 };
