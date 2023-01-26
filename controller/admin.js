@@ -78,7 +78,12 @@ exports.getPostEditProducts = async (req, res, next) => {
 
 exports.getAllProducts = (req, res, next) => {
   Product.find()
+    //mongoose method to select only fields that we want and we dont want.
+    //populate use to get object of another collection passing by ref, also can specify which field you want
+    .select("title price _id")
+    .populate("userId", "name")
     .then((products) => {
+      console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Products",
