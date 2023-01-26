@@ -9,7 +9,9 @@ exports.postAddProducts = (req, res, next) => {
     title: title,
     price: price,
     description: description,
-    imageUrl: imageUrl
+    imageUrl: imageUrl,
+    //mongoose will pick the ID from the req object by itself!! so you dont have to do req.user._id
+    userId: req.user
   });
   product
     .save()
