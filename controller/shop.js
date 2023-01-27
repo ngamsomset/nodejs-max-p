@@ -44,13 +44,17 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
+  //with mongoose, because we got the user in the request, we can use populate to
+  //get the cart item by the productId that already in the user.
   req.user
-    .getCart()
-    .then((cartProducts) => {
+    .populate("cart.items.productId")
+    .then((user) => {
+      const products = user.cart.items;
+      console.log(products);
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: cartProducts
+        products: products
       });
     })
     .catch((err) => {
