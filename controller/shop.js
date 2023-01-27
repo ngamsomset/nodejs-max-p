@@ -120,12 +120,12 @@ exports.postOrders = (req, res, next) => {
     .catch((err) => console.error(err));
 };
 
-// exports.getOrders = (req, res, next) => {
-//   req.user.getOrder().then((order) => {
-//     res.render("shop/orders", {
-//       path: "/orders",
-//       pageTitle: "Get orders",
-//       orders: order
-//     });
-//   });
-// };
+exports.getOrders = (req, res, next) => {
+  Order.find({ "user.userId": req.user._id }).then((order) => {
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Get orders",
+      orders: order
+    });
+  });
+};
