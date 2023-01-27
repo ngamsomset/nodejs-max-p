@@ -102,7 +102,6 @@ exports.postOrders = (req, res, next) => {
           product: { ...i.productId._doc }
         };
       });
-      console.log(products);
       const order = new Order({
         user: {
           name: req.user.name,
@@ -111,6 +110,9 @@ exports.postOrders = (req, res, next) => {
         products: products
       });
       return order.save();
+    })
+    .then((data) => {
+      return req.user.clearCart();
     })
     .then((data) => {
       res.redirect("/orders");
