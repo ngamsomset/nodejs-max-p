@@ -51,55 +51,17 @@ userSchema.methods.addToCart = function (product) {
   return this.save();
 };
 
+userSchema.methods.deleteFromCart = function (productId) {
+  const updatedCartItem = this.cart.items.filter((product) => {
+    return product.productId.toString() !== productId.toString();
+  });
+  //set the cart items to the updated one and call save() method
+  this.cart.items = updatedCartItem;
+
+  return this.save();
+};
+
 module.exports = mongoose.model("User", userSchema);
-// const mongodb = require('mongodb')
-// const getDb = require('../utils/database').getDb
-
-// class User {
-//     constructor(username, email, cart, id){
-//         this.name = username
-//         this.email = email
-//         this.cart = cart // {items: []}
-//         this._id = id
-//     }
-
-//     save(){
-//         const db = getDb()
-//         return db.collection('users').insertOne(this)
-//                 .catch(err => {console.log(err)})
-//     }
-
-//     //only the person who got an item in the cart.
-//     //getCart() will have to return a fully populated cart.(because we store only a productId in the cart)
-//     //Steps
-//     //- Reach to the DB to find the matching productId in the Cart and the product _id which is in the products.
-//     // Because we don't have a full embeded reference between each collections so we need to merge them manually
-//     getCart(){
-//         const db = getDb()
-
-//         const productIds = []
-//         const quantities = {}
-
-//         //CART
-//         //loop through the cart items and get the productId and quantity
-//         this.cart.items.forEach(element => {
-//             let prodId = element.productId
-//             productIds.push(prodId)
-//             quantities[prodId] = element.quantity
-//         });
-
-//         //PRODUCTS
-//         return db
-//                 .collection('products')
-//                 .find({ _id: { $in: productIds} })
-//                 .toArray()
-//                 .then((products) => {
-//                     return products.map((p) => {
-//                         return {...p, quantity: quantities[p._id]}
-//                     })
-//                 })
-
-//     }
 
 //     deleteFromCart(productId) {
 //         const updatedCartItem = this.cart.items.filter((product) => {
