@@ -9,6 +9,7 @@ const pageNotFoundController = require("./controller/404");
 const mongoose = require("mongoose");
 const User = require("./models/user");
 const session = require("express-session");
+const MongoDBStore = require("connect-mongo");
 
 //set express to load the tempalte engine that we want
 app.set("view engine", "ejs");
@@ -27,7 +28,10 @@ app.use(
   session({
     secret: "my secret",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: MongoDBStore.create({
+      mongoUrl: process.env.MONGODB_URI
+    })
   })
 );
 
@@ -56,7 +60,7 @@ app.use(pageNotFoundController.pageNotFound);
 
 mongoose.set("strictQuery", false);
 mongoose
-  .connect(process.env.DB_CONNECT)
+  .connect(process.env.MONGODB_URI)
   .then((result) => {
     //check if user already exist, if not create one.
     User.findOne().then((user) => {
