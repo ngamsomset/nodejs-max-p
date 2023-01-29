@@ -10,8 +10,7 @@ exports.postAddProducts = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    //mongoose will pick the ID from the req object by itself!! so you dont have to do req.user._id
-    userId: req.user
+    userId: req.session.user
   });
   product
     .save()
@@ -29,7 +28,7 @@ exports.getAddProducts = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -48,7 +47,7 @@ exports.getEditProducts = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -90,7 +89,7 @@ exports.getAllProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Products",
         path: "/admin/products",
-        isAuthenticated: req.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {

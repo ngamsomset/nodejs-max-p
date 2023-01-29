@@ -36,22 +36,6 @@ app.use(
 );
 
 app.use(express.static(path.join(__dirname, "public")));
-
-app.use((req, res, next) => {
-  User.findById("63d306805dc5ec273252b170")
-    .then((user) => {
-      //important! We need to construct a new User because we want to use
-      //all of our User method.
-      req.user = user;
-      next();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
-
-//add the prefix route here to filter. only route contain
-//this particular slug will render.
 app.use("/admin", adminRoute);
 app.use(shopRouter);
 app.use(authRoute);
