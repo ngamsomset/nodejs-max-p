@@ -8,6 +8,7 @@ const pageNotFoundController = require("./controller/404");
 
 const mongoose = require("mongoose");
 const User = require("./models/user");
+const session = require("express-session");
 
 //set express to load the tempalte engine that we want
 app.set("view engine", "ejs");
@@ -21,6 +22,15 @@ const shopRouter = require("./routes/shop");
 const authRoute = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(
+  session({
+    secret: "my secret",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use((req, res, next) => {
