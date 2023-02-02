@@ -13,7 +13,12 @@ exports.postLogin = (req, res, next) => {
     .then((user) => {
       req.session.isLoggedIn = true;
       req.session.user = user;
-      res.redirect("/");
+      //the reason we need to call save() is because we need to make sure that
+      //the session get save FIRST then redirect happen.
+      req.session.save((err) => {
+        console.error(err);
+        res.redirect("/");
+      });
     })
     .catch((err) => {
       console.log(err);
