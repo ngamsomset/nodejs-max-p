@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const User = require("./models/user");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongo");
-
+const flash = require("connect-flash");
 //set express to load the tempalte engine that we want
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -34,6 +34,8 @@ app.use(
     })
   })
 );
+
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -60,20 +62,6 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then((result) => {
-    //check if user already exist, if not create one.
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Brian",
-          email: "briantest@test.com",
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
-
     app.listen(3000);
     console.log("connect!");
   })
