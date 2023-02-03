@@ -10,7 +10,7 @@ const mongoose = require("mongoose");
 const User = require("./models/user");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongo");
-
+const flash = require("connect-flash");
 //set express to load the tempalte engine that we want
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -34,6 +34,8 @@ app.use(
     })
   })
 );
+
+app.use(flash());
 
 app.use((req, res, next) => {
   if (!req.session.user) {
