@@ -3,10 +3,18 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 
 exports.getLogin = (req, res, next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: false
+    errorMessage: message,
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -14,7 +22,7 @@ exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
-    isAuthenticated: false
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -51,6 +59,7 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       if (!user) {
+        req.flash("error", "Invalid credentials");
         return res.redirect("/login");
       }
 
