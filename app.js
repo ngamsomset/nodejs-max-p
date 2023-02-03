@@ -60,20 +60,6 @@ mongoose.set("strictQuery", false);
 mongoose
   .connect(process.env.MONGODB_URI)
   .then((result) => {
-    //check if user already exist, if not create one.
-    User.findOne().then((user) => {
-      if (!user) {
-        const user = new User({
-          name: "Brian",
-          email: "briantest@test.com",
-          cart: {
-            items: []
-          }
-        });
-        user.save();
-      }
-    });
-
     app.listen(3000);
     console.log("connect!");
   })
