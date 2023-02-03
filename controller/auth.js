@@ -24,25 +24,25 @@ exports.postSignup = (req, res, next) => {
   const confirmPassword = req.body.confirmPassword;
   const saltRounds = 10;
 
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        return res.redirect("/");
-      }
+  User.findOne({ email: email }).then((userDoc) => {
+    if (userDoc) {
+      return res.redirect("/");
+    }
 
-      bcrypt.hash(password, saltRounds, function (err, hash) {
+    return bcrypt
+      .hash(password, saltRounds, function (err, hash) {
         const user = new User({
           email: email,
           password: hash,
           cart: { items: [] }
         });
         return user.save();
-      });
-    })
-    .then((result) => {
-      res.redirect("/login");
-    })
-    .catch((err) => console.error(err));
+      })
+      .then((result) => {
+        res.redirect("/login");
+      })
+      .catch((err) => console.error(err));
+  });
 };
 
 exports.postLogin = (req, res, next) => {
