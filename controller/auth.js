@@ -42,12 +42,13 @@ exports.postSignup = (req, res, next) => {
 
   User.findOne({ email: email }).then((userDoc) => {
     if (userDoc) {
-      req.flash("error", "Email already exist!");
-      return res.redirect("/signup");
+      req.flash("error", "Email already exist!!");
+      return res.redirect("/");
     }
 
     return bcrypt
-      .hash(password, saltRounds, function (err, hash) {
+      .hash(password, saltRounds)
+      .then(function (hash) {
         const user = new User({
           email: email,
           password: hash,
