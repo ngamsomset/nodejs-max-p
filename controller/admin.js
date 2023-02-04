@@ -10,7 +10,7 @@ exports.postAddProducts = (req, res, next) => {
     price: price,
     description: description,
     imageUrl: imageUrl,
-    userId: req.user
+    userId: req.user,
   });
   product
     .save()
@@ -28,7 +28,7 @@ exports.getAddProducts = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -47,7 +47,7 @@ exports.getEditProducts = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -78,10 +78,10 @@ exports.getPostEditProducts = async (req, res, next) => {
 };
 
 exports.getAllProducts = (req, res, next) => {
-  Product.find()
-    //mongoose method to select only fields that we want and we dont want.
-    //populate use to get object of another collection passing by ref, also can specify which field you want
-    .select("title price _id")
+  //this step is to make sure that the login user is the only one that see the product that get
+  //created by that user.
+  Product.find({ userId: req.user._id })
+    .select("title price _id description")
     .populate("userId", "name")
     .then((products) => {
       console.log(products);
@@ -89,7 +89,7 @@ exports.getAllProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Products",
         path: "/admin/products",
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
