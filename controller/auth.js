@@ -1,6 +1,15 @@
 const bcrypt = require("bcrypt");
-
+const nodemailer = require("nodemailer");
 const User = require("../models/user");
+
+var transport = nodemailer.createTransport({
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
+  auth: {
+    user: "204c126106378e",
+    pass: "9a8f6bac7ef195"
+  }
+});
 
 exports.getLogin = (req, res, next) => {
   let message = req.flash("error");
@@ -42,12 +51,13 @@ exports.postSignup = (req, res, next) => {
 
   User.findOne({ email: email }).then((userDoc) => {
     if (userDoc) {
-      req.flash("error", "Email already exist!");
-      return res.redirect("/signup");
+      req.flash("error", "Email already exist!!");
+      return res.redirect("/");
     }
 
     return bcrypt
-      .hash(password, saltRounds, function (err, hash) {
+      .hash(password, saltRounds)
+      .then(function (hash) {
         const user = new User({
           email: email,
           password: hash,
@@ -57,6 +67,20 @@ exports.postSignup = (req, res, next) => {
       })
       .then((result) => {
         res.redirect("/login");
+        return transport.sendMail(
+          {
+            from: "test@app.com",
+            to: email,
+            subject: "TEST",
+            html: "<h1>TEST</h1>"
+          },
+          (error, info) => {
+            if (error) {
+              return console.log(error);
+            }
+            console.log("Message sent: %s", info.messageId);
+          }
+        );
       })
       .catch((err) => console.error(err));
   });
