@@ -180,3 +180,24 @@ exports.postReset = (req, res, next) => {
       });
   });
 };
+
+
+exports.getNewpassword = (req,res,next) => {
+  let message = req.flash("error");
+  if (message.length > 0) {
+    message = message[0];
+  } else {
+    message = null;
+  }
+
+  res.render("auth/new-password", {
+    path: "/new-password",
+    pageTitle: "New Password",
+    errorMessage: message,
+    isAuthenticated: req.session.isLoggedIn
+  });
+}
+
+exports.postNewpassword = (req, res, next) => {
+
+}
