@@ -8,8 +8,8 @@ var transport = nodemailer.createTransport({
   port: 2525,
   auth: {
     user: "204c126106378e",
-    pass: "9a8f6bac7ef195"
-  }
+    pass: "9a8f6bac7ef195",
+  },
 });
 
 exports.getLogin = (req, res, next) => {
@@ -24,7 +24,7 @@ exports.getLogin = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: message,
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -40,7 +40,7 @@ exports.getSignup = (req, res, next) => {
     path: "/signup",
     pageTitle: "Signup",
     errorMessage: message,
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -62,7 +62,7 @@ exports.postSignup = (req, res, next) => {
         const user = new User({
           email: email,
           password: hash,
-          cart: { items: [] }
+          cart: { items: [] },
         });
         return user.save();
       })
@@ -73,7 +73,7 @@ exports.postSignup = (req, res, next) => {
             from: "test@app.com",
             to: email,
             subject: "TEST",
-            html: "<h1>TEST</h1>"
+            html: "<h1>TEST</h1>",
           },
           (error, info) => {
             if (error) {
@@ -130,7 +130,7 @@ exports.getReset = (req, res, next) => {
     path: "/reset",
     pageTitle: "Reset Password",
     errorMessage: message,
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -165,7 +165,7 @@ exports.postReset = (req, res, next) => {
             subject: "TEST",
             html: `
               <p>Reset password <a href="http://localhost:3000/reset/${token}">here</a><p>
-            `
+            `,
           },
           (error, info) => {
             if (error) {
@@ -181,23 +181,26 @@ exports.postReset = (req, res, next) => {
   });
 };
 
+exports.getNewpassword = (req, res, next) => {
+  const token = req.params.token;
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user) => {
+      let message = req.flash("error");
+      if (message.length > 0) {
+        message = message[0];
+      } else {
+        message = null;
+      }
+      console.log(user);
+      res.render("auth/new-password", {
+        path: "/new-password",
+        pageTitle: "New Password",
+        errorMessage: message,
+        isAuthenticated: req.session.isLoggedIn,
+        userId: user._id.toString(),
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
-exports.getNewpassword = (req,res,next) => {
-  let message = req.flash("error");
-  if (message.length > 0) {
-    message = message[0];
-  } else {
-    message = null;
-  }
-
-  res.render("auth/new-password", {
-    path: "/new-password",
-    pageTitle: "New Password",
-    errorMessage: message,
-    isAuthenticated: req.session.isLoggedIn
-  });
-}
-
-exports.postNewpassword = (req, res, next) => {
-
-}
+exports.postNewpassword = (req, res, next) => {};

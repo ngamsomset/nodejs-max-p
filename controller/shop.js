@@ -8,7 +8,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "all Products",
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -24,7 +24,7 @@ exports.getProduct = (req, res, next) => {
         product: product,
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -39,7 +39,7 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         pageTitle: "Shop",
         path: "/",
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -59,7 +59,7 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
-        isAuthenticated: req.session.isLoggedIn
+        isAuthenticated: req.session.isLoggedIn,
       });
     })
     .catch((err) => {
@@ -93,7 +93,7 @@ exports.checkOut = (req, res, next) => {
   res.render("shop/checkout", {
     path: "/checkout",
     pageTitle: "Check out",
-    isAuthenticated: req.session.isLoggedIn
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -104,15 +104,15 @@ exports.postOrders = (req, res, next) => {
       const products = user.cart.items.map((i) => {
         return {
           quantity: i.quantity,
-          product: { ...i.productId._doc }
+          product: { ...i.productId._doc },
         };
       });
       const order = new Order({
         user: {
           name: req.user.name,
-          userId: req.user
+          userId: req.user,
         },
-        products: products
+        products: products,
       });
       return order.save();
     })
@@ -131,7 +131,7 @@ exports.getOrders = (req, res, next) => {
       path: "/orders",
       pageTitle: "Get orders",
       orders: order,
-      isAuthenticated: req.session.isLoggedIn
+      isAuthenticated: req.session.isLoggedIn,
     });
   });
 };
