@@ -65,7 +65,7 @@ exports.getPostEditProducts = async (req, res, next) => {
   Product.findById(prodId)
     .then((product) => {
       //this step is to make sure that only account that create that product can edit it
-      if (product.userId !== req.user._id) {
+      if (product.userId.toString() !== req.user._id.toString()) {
         return res.redirect("/");
       }
       product.title = updatedTitle;
