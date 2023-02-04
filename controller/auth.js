@@ -191,16 +191,39 @@ exports.getNewpassword = (req, res, next) => {
       } else {
         message = null;
       }
-      console.log(user);
+
       res.render("auth/new-password", {
         path: "/new-password",
         pageTitle: "New Password",
         errorMessage: message,
         isAuthenticated: req.session.isLoggedIn,
         userId: user._id.toString(),
+        passwordToken: token,
       });
     })
     .catch((err) => console.log(err));
 };
 
-exports.postNewpassword = (req, res, next) => {};
+exports.postNewpassword = (req, res, next) => {
+  const newPassword = req.body.password;
+  const userId = req.body.userId;
+  const passwordToken = req.body.passwordToken;
+
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExpiration: { $gt: Date.now() },
+    _id: userId,
+  })
+    .then((user) => {
+      bcrypt.hash(newPassword, 10).then(function (hash) {
+        user.password = hash;
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+        return user.save();
+      });
+    })
+    .then((result) => {
+      return res.redirect("/login");
+    })
+    .catch((err) => console.log(err));
+};
