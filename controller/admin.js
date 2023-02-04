@@ -64,16 +64,20 @@ exports.getPostEditProducts = async (req, res, next) => {
 
   Product.findById(prodId)
     .then((product) => {
+      //this step is to make sure that only account that create that product can edit it
+      if (product.userId !== req.user._id) {
+        return res.redirect("/");
+      }
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.imageUrl = updatedImageUrl;
       product.description = updatedDesc;
-      return product.save();
+      return product.save().then((result) => {
+        console.log("UPDATED PRODUCT!");
+        res.redirect("/admin/products");
+      });
     })
-    .then((result) => {
-      console.log("UPDATED PRODUCT!");
-      res.redirect("/admin/products");
-    })
+
     .catch((err) => console.log(err));
 };
 
@@ -84,7 +88,6 @@ exports.getAllProducts = (req, res, next) => {
     .select("title price _id description")
     .populate("userId", "name")
     .then((products) => {
-      console.log(products);
       res.render("admin/products", {
         prods: products,
         pageTitle: "Products",
