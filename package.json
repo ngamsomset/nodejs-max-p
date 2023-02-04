@@ -19,7 +19,9 @@
   },
   "homepage": "https://github.com/ngamsomset/nodejs-max-p#readme",
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "eslint": "^8.33.0",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.3"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
